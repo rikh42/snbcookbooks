@@ -36,7 +36,7 @@ when "debian", "ubuntu"
     keyserver "keyserver.ubuntu.com"
     key "7F0CEB10"
     action :add
-    notifies :run, "execute[apt-get update]", :immediately
+    #notifies :run, "execute[apt-get update]", :immediately
   end
 
   package "mongodb" do
