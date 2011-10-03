@@ -2,3 +2,7 @@ Small Neat Box Chef Cookbooks
 
 for use with Scalarium.com
 
+
+Mercurial installation from OpsCode - git://github.com/opscode/cookbooks.git
+MongoDB originally from edelight - git://github.com/edelight/cookbooks.git
+
