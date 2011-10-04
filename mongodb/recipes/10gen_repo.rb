@@ -36,6 +36,7 @@ when "debian", "ubuntu"
     keyserver "keyserver.ubuntu.com"
     key "7F0CEB10"
     action :add
+    # Not needed. Apt_Repository does this automatically, plus the below seems to cause an error.
     #notifies :run, "execute[apt-get update]", :immediately
   end
 
