@@ -1,4 +1,3 @@
-default[:shipit] = {}
 
 ## The apps folder where it will be deployed
 default[:shipit][:deploy_to] = "/srv/www/#{application}"
