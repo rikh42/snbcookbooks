@@ -27,12 +27,18 @@ directory "#{node[:shipit][:release_path]}" do
   recursive true
 end
 
-directory "#{node[:shipit][:current_path]}" do
-  action :create
-  mode 0755
+#directory "#{node[:shipit][:current_path]}" do
+#  action :create
+#  mode 0755
+#  owner node[:shipit][:user]
+#  group node[:shipit][:group]
+#  recursive true
+#end
+
+link "#{node[:shipit][:current_path]}" do
+  to "#{node[:shipit][:release_path]}"
   owner node[:shipit][:user]
   group node[:shipit][:group]
-  recursive true
 end
 
 hg node[:shipit][:release_path] do
