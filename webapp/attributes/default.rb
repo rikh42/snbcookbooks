@@ -1,6 +1,6 @@
 
 ## The apps folder where it will be deployed
-default[:shipit][:deploy_to] = "/srv/www/#{application}"
+default[:shipit][:deploy_to] = "/srv/www/webapp"
 
 ## Time now. We'll create a folder with this timestamp in it and install into that...
 default[:shipit][:release_date] = Time.now.utc.strftime("%Y%m%d%H%M%S")
