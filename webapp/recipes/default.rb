@@ -22,8 +22,8 @@ node[:deploy].each do |application, deploy|
   Chef::Log.warn("Looing at app #{application}. Type = #{deploy[:application_type]}. Data = #{deploy}")
 
   ## Skip applications that aren't in our format
-  if deploy[:application_type] != 'other'
-    Chef::Log.debug("Skipping webapp deploy #{application} as we only support type=other")
+  if deploy[:application_type] != 'php'
+    Chef::Log.debug("Skipping webapp deploy #{application} as we only support type=php")
     next
   end
 
