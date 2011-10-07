@@ -11,7 +11,13 @@ node[:deploy].each do |application, deploy|
 	## Useful paths to the install path and the live path
 	default[:shipit][application][:release_path] = "#{node[:shipit][application][:deploy_to]}/releases/#{node[:shipit][application][:release_date]}"
 	default[:shipit][application][:current_path] = "#{node[:shipit][application][:deploy_to]}/current"
-	default[:shipit][application][:doc_root] = "#{node[:shipit][application][:deploy_to]}/current/htdocs"
+
+	## generate the absolute path to the document root (using data from Scalarium)
+	if deploy[:document_root]
+		default[:shipit][application][:absolute_document_root] = "#{default[:shipit][application][:current_path]}/#{deploy[:document_root]}/"
+	else
+		default[:shipit][application][:absolute_document_root] = "#{default[:deploy][application][:current_path]}/"
+	end
 
 	## user and group information - will we need this?
 	default[:shipit][application][:action] = 'deploy'

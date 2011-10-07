@@ -50,6 +50,24 @@ node[:deploy].each do |application, deploy|
     action :sync
   end
 
+  ## configure and activate the web app (make the config files etc)
+  web_app deploy[:application] do
+    docroot shipit[:absolute_document_root]
+    server_name deploy[:domains].first
+    server_aliases deploy[:domains][1, deploy[:domains].size] unless deploy[:domains][1, deploy[:domains].size].empty?
+    mounted_at deploy[:mounted_at]
+    ssl_certificate_ca deploy[:ssl_certificate_ca]
+  end
+
+  # move away default virtual host so that our app can be the default
+  execute "mv away default virtual host" do
+    action :run
+    command "mv /etc/apache2/sites-enabled/000-default /etc/apache2/sites-enabled/zzz-default"
+    only_if do 
+      File.exists?("#{node[:apache][:dir]}/sites-enabled/000-default") 
+    end
+  end
+
   ## Create or update the link to the new release path, making the changes live
   link "#{shipit[:current_path]}" do
     to "#{shipit[:release_path]}"
