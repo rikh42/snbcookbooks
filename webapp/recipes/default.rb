@@ -45,7 +45,7 @@ node[:deploy].each do |application, deploy|
   ## We actually set this up in the Scalarium interface as a Subversion repro
   ## as that lets us specify all the fields we need
   hg shipit[:release_path] do
-    repository "https://#{deploy[:scm][:user]}:#{deploy[:scm][:password]}@deploy[:scm][:repository]"
+    repository "https://#{deploy[:scm][:user]}:#{deploy[:scm][:password]}@#{deploy[:scm][:repository]}"
     reference "tip"
     action :sync
   end

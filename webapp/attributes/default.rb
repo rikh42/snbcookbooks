@@ -9,9 +9,9 @@ node[:deploy].each do |application, deploy|
 	default[:shipit][application][:release_date] = Time.now.utc.strftime("%Y%m%d%H%M%S")
 
 	## Useful paths to the install path and the live path
-	default[:shipit][application][:release_path] = "#{node[:shipit][:deploy_to]}/releases/#{node[:shipit][:release_date]}"
-	default[:shipit][application][:current_path] = "#{node[:shipit][:deploy_to]}/current"
-	default[:shipit][application][:doc_root] = "#{node[:shipit][:deploy_to]}/current/htdocs"
+	default[:shipit][application][:release_path] = "#{node[:shipit][application][:deploy_to]}/releases/#{node[:shipit][application][:release_date]}"
+	default[:shipit][application][:current_path] = "#{node[:shipit][application][:deploy_to]}/current"
+	default[:shipit][application][:doc_root] = "#{node[:shipit][application][:deploy_to]}/current/htdocs"
 
 	## user and group information - will we need this?
 	default[:shipit][application][:action] = 'deploy'
