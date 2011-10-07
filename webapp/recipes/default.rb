@@ -17,33 +17,43 @@
 
 
 Chef::Log.warn("Syncing site from Kiln")
-Chef::Log.warn(node[:shipit])
 
-directory "#{node[:shipit][:release_path]}" do
-  action :create
-  mode 0755
-  owner node[:shipit][:user]
-  group node[:shipit][:group]
-  recursive true
+node[:deploy].each do |application, deploy|
+  Chef::Log.warn("Looing at app #{application}. Type = #{deploy[:application_type]}. Data = #{deploy}")
+
+  ## Skip applications that aren't in our format
+  if deploy[:application_type] != 'other'
+    Chef::Log.debug("Skipping webapp deploy #{application} as we only support type=other")
+    next
+  end
+
+  ## Get ready 
+  shipit = node[:shipit][application]
+  Chef::Log.warn("Deploying Application #{application} to #{shipit[:release_path]}")
+  Chef::Log.warn(shipit)
+
+  ## create the new release directory
+  directory "#{shipit[:release_path]}" do
+    action :create
+    mode 0755
+    owner node[:shipit][:user]
+    group node[:shipit][:group]
+    recursive true
+  end
+
+  ## Sync with the mercurial repo
+  ## We actually set this up in the Scalarium interface as a Subversion repro
+  ## as that lets us specify all the fields we need
+  hg shipit[:release_path] do
+    repository "https://#{deploy[:scm][:user]}:#{deploy[:scm][:password]}@deploy[:scm][:repository]"
+    reference "tip"
+    action :sync
+  end
+
+  ## Create or update the link to the new release path, making the changes live
+  link "#{shipit[:current_path]}" do
+    to "#{shipit[:release_path]}"
+    owner shipit[:user]
+    group shipit[:group]
+  end
 end
-
-#directory "#{node[:shipit][:current_path]}" do
-#  action :create
-#  mode 0755
-#  owner node[:shipit][:user]
-#  group node[:shipit][:group]
-#  recursive true
-#end
-
-link "#{node[:shipit][:current_path]}" do
-  to "#{node[:shipit][:release_path]}"
-  owner node[:shipit][:user]
-  group node[:shipit][:group]
-end
-
-hg node[:shipit][:release_path] do
-  repository "https://#{node[:snb][:kilnuser]}:#{node[:snb][:kilnpass]}@smallneatbox.kilnhg.com/Repo/Repositories/CMS/promo"
-  reference "tip"
-  action :sync
-end
-
