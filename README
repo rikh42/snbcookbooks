@@ -3,6 +3,19 @@ Small Neat Box Chef Cookbooks
 for use with Scalarium.com
 
 
-Mercurial installation from OpsCode - git://github.com/opscode/cookbooks.git
-MongoDB originally from edelight - git://github.com/edelight/cookbooks.git
+MongoDB originally from edelight
+git://github.com/edelight/cookbooks.git
+
+apt receipes from Opscode 
+used by MongoDB to add Mongos more up to date stable releases to the installation
+Ubuntu official releases of Mongo are rather out of date. 
+git://github.com/opscode/cookbooks.git
+
+hg Mercuial recipies from Napes
+http://napes.co.uk/projects/chef-hg
+https://bitbucket.org/niallsco/chef-cookbooks
+
+Apache Template from Scalarium Cookbooks (apache2), which I think it based on the official Opscode receipes
+git://github.com/scalarium/cookbooks.git
+http://www.scalarium.com/
 

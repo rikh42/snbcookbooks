@@ -1,22 +1,30 @@
+# Author:: Rik. (chef@smallneatbox.co.uk)
+# Cookbook Name:: webapp
+# Recipe:: default
+#
+# Copyright 2011, Small Neat Box Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-## testing deploying an app with mercurial
+## Deploy Apps on Scalarium from a Mercurial Repo
+## Creates new release folder (named with the current timestamp), clones the project
+## into it, configures apache to use it and finally updates a symlink to point at
+## the new release.
 
-## What does this have to do. Assuming we have apache / php installed on the server and not a lot else.
-
-### Create a vhost for the app and restart apache
-
-### Create a folder for the app to live in :-
-### live - symlink to the current release
-### deployments
-### 	201110041242
-### 		all files in here
-### 		htdocs - live above will be a symlink to one of these folders.
-
-### get the latest release and put it into an appropriate folder
+## The web_app.conf.erb template file was taken from the Scalarium chef receipies on Github
 
 
-
-Chef::Log.warn("Syncing site from Kiln")
+Chef::Log.warn("Deploying Apps")
 
 node[:deploy].each do |application, deploy|
   Chef::Log.warn("Looing at app #{application}. Type = #{deploy[:application_type]}. Data = #{deploy}")
@@ -44,6 +52,7 @@ node[:deploy].each do |application, deploy|
   ## Sync with the mercurial repo
   ## We actually set this up in the Scalarium interface as a Subversion repro
   ## as that lets us specify all the fields we need
+  Chef::Log.warn("Syncing site from Kiln")
   hg shipit[:release_path] do
     repository "https://#{deploy[:scm][:user]}:#{deploy[:scm][:password]}@#{deploy[:scm][:repository]}"
     reference "tip"
@@ -51,6 +60,7 @@ node[:deploy].each do |application, deploy|
   end
 
   ## configure and activate the web app (make the config files etc)
+  Chef::Log.warn("Updating Apache config for App")
   web_app deploy[:application] do
     docroot shipit[:absolute_document_root]
     server_name deploy[:domains].first
@@ -69,9 +79,14 @@ node[:deploy].each do |application, deploy|
   end
 
   ## Create or update the link to the new release path, making the changes live
+  Chef::Log.warn("Updating symlink to new latest release")
   link "#{shipit[:current_path]}" do
     to "#{shipit[:release_path]}"
     owner shipit[:user]
     group shipit[:group]
   end
 end
+
+
+Chef::Log.warn("Deploy All Done")
+

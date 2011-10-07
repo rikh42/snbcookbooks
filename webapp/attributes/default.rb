@@ -1,3 +1,4 @@
+## Set up the data we need to perform our deployment
 
 default[:shipit] = {}
 

@@ -1,12 +1,14 @@
-## Rik - Updated to not be using SSH as a test.
+## Updated Napes original code that was based on SSH access to the Mercurial Repo.
+## Our Mercurial Server does not support this, so I updated the hg commands to something that
+## would work for us.
+
+## Clone and / or Sync with the repo. Use this by default
 action :sync do
   execute "clone repository" do    
     not_if "hg identify #{new_resource.path}"
-    #command "hg clone -e 'ssh -i #{new_resource.key} -o StrictHostKeyChecking=no' -r #{new_resource.reference} #{new_resource.repository} #{new_resource.path}"
     command "hg clone -r #{new_resource.reference} #{new_resource.repository} #{new_resource.path}"
   end
   execute "pull changes" do
-      #command "cd #{new_resource.path} && hg pull -e 'ssh -i #{new_resource.key} -o StrictHostKeyChecking=no' -r #{new_resource.reference} #{new_resource.repository}"
       command "cd #{new_resource.path} && hg pull -r #{new_resource.reference} #{new_resource.repository}"
   end
   execute "update" do
@@ -20,10 +22,11 @@ action :sync do
   end
 end
  
+
+## clone the project 
 action :clone do
   execute "clone repository" do
     not_if "hg identify #{new_resource.path}"
-    #command "hg clone -e 'ssh -i #{new_resource.key} -o StrictHostKeyChecking=no' -r #{new_resource.reference} #{new_resource.repository} #{new_resource.path}"
     command "hg clone -r #{new_resource.reference} #{new_resource.repository} #{new_resource.path}"
   end
   execute "update owner" do
